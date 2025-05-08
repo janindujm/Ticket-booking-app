@@ -18,7 +18,6 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         script {
-          // ✅ Build using Dockerfile inside the auth/ folder
           sh "docker build -t $ECR_REPO:$IMAGE_TAG -f auth/Dockerfile auth"
         }
       }
@@ -27,7 +26,9 @@ pipeline {
     stage('Login to ECR') {
       steps {
         withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'jenkins-aws']]) {
-          sh "aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO"
+          sh """
+            aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REPO
+          """
         }
       }
     }
@@ -38,17 +39,18 @@ pipeline {
       }
     }
 
-    stage('Update Kubeconfig') {
+    stage('Update Kubeconfig & Deploy to EKS') {
       steps {
         withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'jenkins-aws']]) {
-          sh "aws eks update-kubeconfig --region $AWS_REGION --name ticketing-cluster"
-        }
-      }
-    }
+          sh """
+            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+            export AWS_DEFAULT_REGION=$AWS_REGION
 
-    stage('Deploy to EKS') {
-      steps {
-        sh "kubectl set image deployment/auth-deployment auth=$ECR_REPO:$IMAGE_TAG"
+            aws eks update-kubeconfig --region $AWS_REGION --name ticketing-cluster
+            kubectl set image deployment/auth-deployment auth=$ECR_REPO:$IMAGE_TAG
+          """
+        }
       }
     }
   }
