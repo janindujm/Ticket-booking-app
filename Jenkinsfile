@@ -8,7 +8,6 @@ pipeline {
   }
 
   stages {
-
     stage('Checkout Code') {
       steps {
         git url: 'https://github.com/janindujm/Ticket-booking-app.git', branch: 'main'
@@ -41,10 +40,8 @@ pipeline {
 
     stage('Verify AWS Credentials') {
       steps {
-        script {
-          sh """
-            aws sts get-caller-identity
-          """
+        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'jenkins-aws']]) {
+          sh "aws sts get-caller-identity"
         }
       }
     }
@@ -53,10 +50,6 @@ pipeline {
       steps {
         withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'jenkins-aws']]) {
           sh """
-            export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-            export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-            export AWS_DEFAULT_REGION=$AWS_REGION
-
             # Update Kubeconfig
             aws eks update-kubeconfig --region $AWS_REGION --name ticketing-cluster
             
