@@ -39,6 +39,16 @@ pipeline {
       }
     }
 
+    stage('Verify AWS Credentials') {
+      steps {
+        script {
+          sh """
+            aws sts get-caller-identity
+          """
+        }
+      }
+    }
+
     stage('Update Kubeconfig & Deploy to EKS') {
       steps {
         withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'jenkins-aws']]) {
@@ -47,7 +57,13 @@ pipeline {
             export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
             export AWS_DEFAULT_REGION=$AWS_REGION
 
+            # Update Kubeconfig
             aws eks update-kubeconfig --region $AWS_REGION --name ticketing-cluster
+            
+            # Verify kubectl access to the cluster
+            kubectl get svc
+            
+            # Deploy image
             kubectl set image deployment/auth-deployment auth=$ECR_REPO:$IMAGE_TAG
           """
         }
