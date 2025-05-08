@@ -18,7 +18,8 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         script {
-          sh "docker build -t $ECR_REPO:$IMAGE_TAG ."
+          // ✅ Build using Dockerfile inside the auth/ folder
+          sh "docker build -t $ECR_REPO:$IMAGE_TAG -f auth/Dockerfile auth"
         }
       }
     }
