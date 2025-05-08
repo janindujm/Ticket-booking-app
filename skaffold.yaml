@@ -15,5 +15,5 @@ build:
       sync:
         manual:
           - src: "src/**/*.ts"
-            dest: .v  
+            dest: .
 
