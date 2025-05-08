@@ -40,7 +40,7 @@ pipeline {
 
     stage('Update Kubeconfig') {
       steps {
-        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-jenkins']]) {
+        withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'jenkins-aws']]) {
           sh "aws eks update-kubeconfig --region $AWS_REGION --name ticketing-cluster"
         }
       }
