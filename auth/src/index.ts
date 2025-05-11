@@ -6,7 +6,7 @@ app.use(json());
 
 
 app.get('/api/users/current', (req, res) => {
-    res.send('/api/users/currentdjjdjekdjeijdeijdiejdiedjeijdeij');
+    res.send('/api/users/currentdjjdjekdjeijdeijdiejdiedjeijdeijngnfngfngg');
   });
 
   app.get('/api/users/move', (req, res) => {
