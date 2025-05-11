@@ -16,10 +16,10 @@ spec:
     spec:
       containers:
         - name: auth
-          image: 010526250202.dkr.ecr.us-east-1.amazonaws.com/auth:latest
-          imagePullPolicy: Always
-      imagePullSecrets:
-        - name: ecr-secret # Reference the secret we created earlier
+          image: janindujm/auth
+          imagePullPolicy: IfNotPresent
+     # imagePullSecrets:
+      #  - name: ecr-secret # Reference the secret we created earlier
 
 ---
 apiVersion: v1

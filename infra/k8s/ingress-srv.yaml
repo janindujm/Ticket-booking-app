@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: auth.ticketing.dev
+    - host: ticketing.dev
       http:
         paths:
           - path: /api/users

@@ -9,16 +9,16 @@ WORKDIR /app
 COPY package.json ./
 COPY package-lock.json ./
 
-# Install ALL dependencies (including devDependencies)
-RUN npm install
+# Install dependencies (including devDependencies)
+RUN npm install --legacy-peer-deps
 
-# Copy rest of the app
+# Install ts-node-dev globally to make sure it's available
+RUN npm install -g ts-node-dev
+
+# Copy the rest of the app
 COPY . .
 
-# Make sure ts-node-dev is executable
-RUN chmod +x ./node_modules/.bin/ts-node-dev
-
-# Expose the port your app uses
+# Expose the port the app runs on
 EXPOSE 3000
 
 # Start the app using ts-node-dev
