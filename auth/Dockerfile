@@ -1,8 +1,17 @@
-FROM node:alpine
+FROM node:18-alpine
+
+# Fix node-gyp issues & improve dev tool support
+RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
-COPY package.json .
+
+COPY package*.json ./
+
+# Install dev dependencies including ts-node-dev and typescript
 RUN npm install
+
 COPY . .
+
+EXPOSE 3000
 
 CMD ["npm", "start"]
