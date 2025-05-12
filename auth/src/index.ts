@@ -4,6 +4,7 @@ import { currentUserRouter } from './routes/current-user';
 import { signoutRouter } from './routes/signout';
 import { signupRouter } from './routes/signup';
 import { signinRouter } from './routes/signin';
+import { errorHandler } from './middlewares/error-handler';
 
 const app = express();
 app.use(json());
@@ -12,6 +13,7 @@ app.use(currentUserRouter);
 app.use(signoutRouter);
 app.use(signupRouter);
 app.use(signinRouter);
+app.use(errorHandler);
 
 app.listen(3000, () => {
   console.log('Auth service listening on port 3000!');
