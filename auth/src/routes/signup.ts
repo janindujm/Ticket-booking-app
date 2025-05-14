@@ -27,7 +27,7 @@ async (req: Request, res: Response) => {
     const {email, password} = req.body;
     const existingUser = await User.findOne({email});
     if (existingUser) {
-        return res.status(400).send({ errors: [{ message: 'Email in use' }] });
+       // return res.status(400).send({ errors: [{ message: 'Email in use' }] });
     }
     
     const user = User.build({email,password});
